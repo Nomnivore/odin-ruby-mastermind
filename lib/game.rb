@@ -1,18 +1,19 @@
 # frozen_string_literal: false
 
-# require_relative './color'
-require_relative './options'
+require_relative './display'
+require 'colorize'
 
 # The main logic/flow of the game
 class Game
   attr_reader :turns
 
-  include Options
+  include Display
 
   def initialize
     @mode = nil
     @code = nil
-    @turns = max_turns
+    @turns = 12
+    @colors = %w[R G B Y P C]
   end
 
   def play
@@ -21,6 +22,9 @@ class Game
     case @mode
     when :breaker
       # breaker mode, computer makes code and player guesses
+      codebreaker_rules
+      make_code
+      player_guesses
 
     end
   end
@@ -37,8 +41,14 @@ class Game
 
   def make_code
     @code = []
-    6.times { @code.append(colors.sample) }
-    p @code
+    4.times { @code.append(@colors.sample) }
   end
+
+  
+
+  def player_guesses
+    color_options
+    # etc
+  end
+
 end
-Game.new
