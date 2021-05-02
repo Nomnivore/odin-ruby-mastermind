@@ -31,7 +31,7 @@ class Game
   end
 
   def pick_gamemode
-    puts "Please choose the gamemode you'd like to play:\n[1] Codebreaker\n[2] Codemaker (WIP)"
+    print "Please choose the gamemode you'd like to play:\n[1] Codebreaker\n[2] Codemaker (WIP)\n \n#: "
     choice = gets.chomp.to_i
     until choice.eql?(1) || choice.eql?(2)
       puts "Type '1' or '2' (without quotes) corresponding to your choice"
@@ -69,14 +69,22 @@ class Game
     end
   end
 
-  def process_guess(guess) # rubocop:disable Metrics/MethodLength
+  def process_guess(guess) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    # i'm sure it's badly written code, but it does what it's supposed to. would love to know a more elegant solution!
     resp = []
     copy = @code.dup
-    guess.split('').each_with_index do |color, ind|
-      if copy[ind] == color
-        resp.push('C')
-        copy[ind] = 'x'
-      elsif copy.include?(color)
+    guess_copy = guess.split('')
+    guess_copy.each_with_index do |color, ind|
+      next unless copy[ind] == color
+
+      resp.push('C')
+      copy[ind] = 'x'
+      guess_copy[ind] = 'x'
+    end
+    guess_copy.each do |color|
+      next if color == 'x'
+
+      if copy.include?(color)
         resp.push('W')
         copy[copy.index(color)] = 'x'
       end
