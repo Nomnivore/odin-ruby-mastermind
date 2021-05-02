@@ -4,16 +4,16 @@
 module Display
   def codebreaker_rules # rubocop:disable Metrics/MethodLength
     system 'clear'
-    puts 'The computer has generated a randomized 4 color code. '
-    puts "You will have #{@turns} attempts to guess the correct colors in exact order."
-    puts 'The possible colors are as follows:'
+    puts 'The computer has generated a randomized 4 digit code. '
+    puts "You will have #{@turns} attempts to guess the correct code in exact order."
+    puts 'The possible digits are as follows:'
     color_options
-    puts "\nYour guess should consist of 4 letters, corresponding to a color above"
+    puts "\nYour guess should consist of 4 numbers,"
     puts 'in the order of your guess. No blanks will be allowed.'
-    puts 'Ex: RBGR'
-    puts "After each guess, you'll receive a 4 letter response, in random order:"
-    puts 'W: A color is correct, but in the wrong place'
-    puts 'C: A color is correct and in the right place.'
+    puts 'Ex: 1241'
+    puts "After each guess, you'll receive a clue of up to 4 letters, in no particular order:"
+    puts 'O: A digit is correct, but in the wrong place'
+    puts 'X: A digit is correct and in the right place.'
     puts "\nPress Enter when you are ready to start guessing!"
     gets
     system 'clear'
@@ -32,6 +32,6 @@ module Display
   end
 
   def color_options
-    puts "[R] Red    [G] Green  [B] Blue\n[Y] Yellow [P] Purple [C] Cyan"
+    puts '[ 1 ] [ 2 ] [ 3 ] [ 4 ] [ 5 ] [ 6 ]'
   end
 end

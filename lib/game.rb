@@ -13,7 +13,7 @@ class Game
     @mode = nil
     @code = nil
     @turns = 12
-    @colors = %w[R G B Y P C]
+    @colors = %w[1 2 3 4 5 6]
     @guesses = {}
   end
 
@@ -58,9 +58,9 @@ class Game
   def gets_guess # rubocop:disable Metrics/MethodLength
     loop do
       print "##{@guesses.length + 1}: "
-      guess = gets.chomp.match(/[rgbypc]{4}/i).to_s.upcase
+      guess = gets.chomp.match(/[1-6]{4}/i).to_s.upcase
       if guess.empty?
-        puts 'Invalid guess: Must be 4 letters in a row, corresponding to colors'
+        puts 'Invalid guess: Must be 4 numbers in a row'
       elsif @guesses.key?(guess)
         puts 'You already guessed that!'
       else
@@ -77,30 +77,30 @@ class Game
     guess_copy.each_with_index do |color, ind|
       next unless copy[ind] == color
 
-      resp.push('C')
-      copy[ind] = 'x'
-      guess_copy[ind] = 'x'
+      resp.push('X')
+      copy[ind] = nil
+      guess_copy[ind] = nil
     end
     guess_copy.each do |color|
-      next if color == 'x'
+      next unless color
 
       if copy.include?(color)
-        resp.push('W')
-        copy[copy.index(color)] = 'x'
+        resp.push('O')
+        copy[copy.index(color)] = nil
       end
     end
     @guesses[guess] = resp.sort.join
   end
 
   def correct?(guess)
-    @guesses[guess].eql?('CCCC')
+    @guesses[guess].eql?('XXXX')
   end
 
   def game_end
     msg = [
       'You got it! It was',
       'Game over! The correct code was'
-    ][@guesses.value?('CCCC') ? 0 : 1]
+    ][@guesses.value?('XXXX') ? 0 : 1]
     puts "#{msg} #{@code.join}"
   end
 end
