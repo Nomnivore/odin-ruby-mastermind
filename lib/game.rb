@@ -14,6 +14,7 @@ class Game
     @code = nil
     @turns = 12
     @colors = %w[R G B Y P C]
+    @guesses = {}
   end
 
   def play
@@ -25,7 +26,7 @@ class Game
       codebreaker_rules
       make_code
       player_guesses
-
+      game_end
     end
   end
 
@@ -44,11 +45,54 @@ class Game
     4.times { @code.append(@colors.sample) }
   end
 
-  
-
   def player_guesses
-    color_options
-    # etc
+    while @guesses.length < @turns
+      guess_header
+      guess = gets_guess
+      process_guess(guess)
+      break if correct?(guess)
+
+    end
   end
 
+  def gets_guess # rubocop:disable Metrics/MethodLength
+    loop do
+      print "##{@guesses.length + 1}: "
+      guess = gets.chomp.match(/[rgbypc]{4}/i).to_s.upcase
+      if guess.empty?
+        puts 'Invalid guess: Must be 4 letters in a row, corresponding to colors'
+      elsif @guesses.key?(guess)
+        puts 'You already guessed that!'
+      else
+        break guess
+      end
+    end
+  end
+
+  def process_guess(guess) # rubocop:disable Metrics/MethodLength
+    resp = []
+    copy = @code.dup
+    guess.split('').each_with_index do |color, ind|
+      if copy[ind] == color
+        resp.push('C')
+        copy[ind] = 'x'
+      elsif copy.include?(color)
+        resp.push('W')
+        copy[copy.index(color)] = 'x'
+      end
+    end
+    @guesses[guess] = resp.sort.join
+  end
+
+  def correct?(guess)
+    @guesses[guess].eql?('CCCC')
+  end
+
+  def game_end
+    msg = [
+      'You got it! It was',
+      'Game over! The correct code was'
+    ][@guesses.value?('CCCC') ? 0 : 1]
+    puts "#{msg} #{@code.join}"
+  end
 end

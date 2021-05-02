@@ -5,9 +5,9 @@ module Display
   def codebreaker_rules # rubocop:disable Metrics/MethodLength
     system 'clear'
     puts 'The computer has generated a randomized 4 color code. '
-    puts 'You will have 12 attempts to guess the correct colors in exact order.'
+    puts "You will have #{@turns} attempts to guess the correct colors in exact order."
     puts 'The possible colors are as follows:'
-    puts "R: Red, G: Green, B: Blue\nY:Yellow, P: Purple, C: Cyan"
+    color_options
     puts "\nYour guess should consist of 4 letters, corresponding to a color above"
     puts 'in the order of your guess. No blanks will be allowed.'
     puts 'Ex: RBGR'
@@ -17,6 +17,18 @@ module Display
     puts "\nPress Enter when you are ready to start guessing!"
     gets
     system 'clear'
+  end
+
+  def guess_header
+    system 'clear'
+    puts "Guess ##{@guesses.length + 1}/12"
+    puts 'Previous guesses:' unless @guesses.length.zero?
+    @guesses.each do |guess, resp|
+      puts "  #{guess} -> [ #{resp} ]"
+    end
+    puts "\n"
+    color_options
+    puts "DEBUG!: Code: #{@code.join}"
   end
 
   def color_options
