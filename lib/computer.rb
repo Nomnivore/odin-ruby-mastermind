@@ -45,7 +45,7 @@ class Computer
     @last_clue = clue
     return if @counts.values.sum >= 4
 
-    @counts[@next_digit] = diff.values.sum unless diff.values.sum.zero?
+    @counts[@next_digit] = diff unless diff.zero?
   end
 
   private
@@ -59,8 +59,6 @@ class Computer
   end
 
   def clue_diff(last, clue)
-    diff = {}
-    clue.each { |let, ind| diff[let] = last.key?(let) ? ind - last[let] : ind }
-    diff
+    return clue.values.sum - last.values.sum
   end
 end
