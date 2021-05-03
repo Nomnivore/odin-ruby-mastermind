@@ -45,6 +45,7 @@ class Game # rubocop:disable Metrics/ClassLength
     codemaker_rules
     player_code
     computer_guesses
+    maker_end
   end
 
   def pick_gamemode
@@ -146,5 +147,13 @@ class Game # rubocop:disable Metrics/ClassLength
       'Game over! The correct code was'
     ][@guesses.value?('XXXX') ? 0 : 1]
     puts "#{msg} #{@code.join}"
+  end
+
+  def maker_end
+    if @guesses.value?('XXXX')
+      puts "Guessed it in #{@guesses.length} turns!"
+    else
+      puts 'You win! I could not guess your secret code.'
+    end
   end
 end
