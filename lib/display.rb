@@ -34,4 +34,19 @@ module Display
   def color_options
     puts '[ 1 ] [ 2 ] [ 3 ] [ 4 ] [ 5 ] [ 6 ]'
   end
+
+  def codemaker_rules
+    system 'clear'
+    puts 'In this mode you will create a 4-digit code of your own,'
+    puts 'using digits 1-6 in any order, allowing repeats.'
+    puts 'The computer will get 12 guesses, with clues given after each, to guess your code.'
+  end
+
+  def puts_ai_result
+    puts "Computer turn ##{@guesses.length}/12"
+    clue_str = ""
+    @ai.last_clue.each { |let, num| clue_str += let * num.to_i }
+    puts "#{@ai.last_guess}   |   #{clue_str}"
+    puts "\n"
+  end
 end

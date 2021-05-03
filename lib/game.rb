@@ -1,11 +1,12 @@
 # frozen_string_literal: false
 
 require_relative './display'
+require_relative './computer'
 require 'colorize'
 
 # The main logic/flow of the game
-class Game
-  attr_reader :turns
+class Game # rubocop:disable Metrics/ClassLength
+  attr_reader :turns, :guesses
 
   include Display
 
@@ -17,17 +18,36 @@ class Game
     @guesses = {}
   end
 
+  public
+
   def play
     system 'clear'
     pick_gamemode
     case @mode
     when :breaker
       # breaker mode, computer makes code and player guesses
-      codebreaker_rules
-      make_code
-      player_guesses
-      game_end
+      play_breaker
+    when :maker
+      # maker mode, player makes code and computer guesses
+      @ai = Computer.new(self)
+      play_maker
     end
+  end
+
+  private
+
+  def play_breaker
+    codebreaker_rules
+    make_code
+    player_guesses
+    breaker_end
+  end
+
+  def play_maker
+    codemaker_rules
+    player_code
+    computer_guesses
+    
   end
 
   def pick_gamemode
@@ -45,20 +65,43 @@ class Game
     4.times { @code.append(@colors.sample) }
   end
 
+  def player_code
+    puts 'Enter your secret code:'
+    @code = loop do
+      print '> '
+      code = gets.chomp.match(/[1-6]{4}/i).to_s.split('')
+      break code unless code.empty?
+
+      puts 'Invalid guess: Must be a four digit sequence consisting of 1-6'
+    end
+  end
+
   def player_guesses
     while @guesses.length < @turns
       guess_header
       guess = gets_guess
       process_guess(guess)
       break if correct?(guess)
+    end
+  end
 
+  def computer_guesses
+    while @guesses.length < @turns
+      # ai will call process_guess func
+      guess = @ai.make_guess
+      x = process_guess(guess)
+      @ai.process_clue(x)
+      puts_ai_result
+      break if correct?(guess)
+
+      sleep(1)
     end
   end
 
   def gets_guess # rubocop:disable Metrics/MethodLength
     loop do
       print "##{@guesses.length + 1}: "
-      guess = gets.chomp.match(/[1-6]{4}/i).to_s.upcase
+      guess = gets.chomp.match(/[1-6]{4}/i).to_s
       if guess.empty?
         puts 'Invalid guess: Must be 4 numbers in a row'
       elsif @guesses.key?(guess)
@@ -69,15 +112,17 @@ class Game
     end
   end
 
+  public
+
   def process_guess(guess) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     # i'm sure it's badly written code, but it does what it's supposed to. would love to know a more elegant solution!
-    resp = []
+    clue = []
     copy = @code.dup
     guess_copy = guess.split('')
     guess_copy.each_with_index do |color, ind|
       next unless copy[ind] == color
 
-      resp.push('X')
+      clue.push('X')
       copy[ind] = nil
       guess_copy[ind] = nil
     end
@@ -85,18 +130,20 @@ class Game
       next unless color
 
       if copy.include?(color)
-        resp.push('O')
+        clue.push('O')
         copy[copy.index(color)] = nil
       end
     end
-    @guesses[guess] = resp.sort.join
+    @guesses[guess] = clue.sort.join
   end
+
+  private
 
   def correct?(guess)
     @guesses[guess].eql?('XXXX')
   end
 
-  def game_end
+  def breaker_end
     msg = [
       'You got it! It was',
       'Game over! The correct code was'
