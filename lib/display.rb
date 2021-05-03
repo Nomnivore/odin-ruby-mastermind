@@ -28,7 +28,6 @@ module Display
     end
     puts "\n"
     color_options
-    puts "DEBUG!: Code: #{@code.join}"
   end
 
   def color_options
@@ -44,7 +43,7 @@ module Display
 
   def puts_ai_result
     puts "Computer turn ##{@guesses.length}/12"
-    clue_str = ""
+    clue_str = ''
     @ai.last_clue.each { |let, num| clue_str += let * num.to_i }
     puts "#{@ai.last_guess}   |   #{clue_str}"
     puts "\n"

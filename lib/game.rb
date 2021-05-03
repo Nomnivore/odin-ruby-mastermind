@@ -18,8 +18,6 @@ class Game # rubocop:disable Metrics/ClassLength
     @guesses = {}
   end
 
-  public
-
   def play
     system 'clear'
     pick_gamemode
@@ -47,7 +45,6 @@ class Game # rubocop:disable Metrics/ClassLength
     codemaker_rules
     player_code
     computer_guesses
-    
   end
 
   def pick_gamemode
