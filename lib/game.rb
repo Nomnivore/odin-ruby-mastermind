@@ -49,7 +49,7 @@ class Game # rubocop:disable Metrics/ClassLength
   end
 
   def pick_gamemode
-    print "Please choose the gamemode you'd like to play:\n[1] Codebreaker\n[2] Codemaker (WIP)\n \n#: "
+    print "Please choose the gamemode you'd like to play:\n[1] Codebreaker\n[2] Codemaker\n \n#: "
     choice = gets.chomp.to_i
     until choice.eql?(1) || choice.eql?(2)
       puts "Type '1' or '2' (without quotes) corresponding to your choice"
