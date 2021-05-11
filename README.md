@@ -2,3 +2,5 @@
 Mastermind project for The Odin Project, part of the Ruby Programming course.
 
 Needs polish still, but both gamemodes (player guess & computer guess) are fully playable.
+
+[Live Preview](https://replit.com/@Nomnivore/odin-ruby-mastermind)
